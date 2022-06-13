@@ -18,7 +18,8 @@ use App\Http\Controllers\UsersController;
 
 //Route::post('api/register', [AuthController::class, 'register']);
 //Route::post('api/login', [AuthController::class, 'login']);
-Route::get('/users', [UsersController::class, 'index']);
-//Route::post('api/users/{id}', [ProductController::class, 'show']);
+Route::get('/', [UsersController::class, 'index']);
+Route::get('/users', [UsersController::class, 'show']);
+Route::get('/users/publisher/{id}', [UsersController::class, 'publisherUsers']);
 Route::get('/users/search/{q}', [UsersController::class, 'search']);
 

@@ -24,20 +24,26 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function publisherUsers($id)
     {
-        //
+        $publishers = DB::table('db_publisher')
+        ->join('user', 'db_publisher.id', '=', 'user.db_publisher_id')
+        ->where('db_publisher.id', '=', $id)
+        ->get();
+
+        return $publishers;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+        $users = DB::table('user')->get();
+        return $users;
     }
 
     /**
