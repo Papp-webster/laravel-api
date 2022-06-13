@@ -26,7 +26,7 @@ Route::get('/users', [UsersController::class, 'show']);
 
 
 // Protected routes
-Route::group(['middleware' => ['auth:api']], function () {
+Route::group(['middleware' => ['api_token']], function () {
  Route::get('/users/publisher/{id}', [UsersController::class, 'publisherUsers']);
  Route::get('/users/search/{q}', [UsersController::class, 'search']);
     
