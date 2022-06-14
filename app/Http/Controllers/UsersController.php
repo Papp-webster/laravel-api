@@ -12,12 +12,26 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $id)
+    public function index(Request $request, string $token, string $q = '')
     {
-        $data['users'] = DB::table('db_publisher')
-        ->join('user', 'db_publisher.id', '=', 'user.db_publisher_id')
-        ->where('db_publisher.id', '=', $id)
-        ->get();
+        $publisher = DB::table('db_publisher')
+        ->select('id')
+        ->where('api_token', $token)
+        ->first();
+
+        $query = DB::table('user')
+        ->where('db_publisher_id', $publisher->id);
+
+        if( ! empty($q)){
+            $query->where(function($query) use ($q){
+                $query->where('name', 'like', '%'. $q .'%')
+                ->orWhere('name_last', 'like', '%' . $q . '%')
+                ->orWhere('email', 'like', '%' . $q . '%')
+                ->orWhere('address_city', 'like', '%' . $q . '%');
+            });
+        }
+
+        $data['users'] = $query->get();
 
         return view('welcome', $data);
     }
@@ -28,14 +42,28 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function publisherUsers(Request $request, $id)
+    public function users(Request $request, string $token, string $q = '')
     {
-        $publishers = DB::table('db_publisher')
-        ->join('user', 'db_publisher.id', '=', 'user.db_publisher_id')
-        ->where('db_publisher.id', '=', $id)
-        ->get();
+        $publisher = DB::table('db_publisher')
+        ->select('id')
+        ->where('api_token', $token)
+        ->first();
 
-        return response()->json($publishers);
+        $query = DB::table('user')
+        ->where('db_publisher_id', $publisher->id);
+
+        if( ! empty($q)){
+            $query->where(function($query) use ($q){
+                $query->where('name', 'like', '%'. $q .'%')
+                ->orWhere('name_last', 'like', '%' . $q . '%')
+                ->orWhere('email', 'like', '%' . $q . '%')
+                ->orWhere('address_city', 'like', '%' . $q . '%');
+            });
+        }
+
+        $users = $query->get();
+
+        return response()->json($users);
     }
 
     /**
@@ -62,35 +90,4 @@ class UsersController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  str  $q
-     * @return \Illuminate\Http\Response
-     */
-
-    public function search(Request $request, $q)
-    {
-        
-        $search = DB::table('user')
-        ->where('name', 'like', '%'. $q .'%')
-        ->orWhere('name_last', 'like', '%' . $q . '%')
-        ->orWhere('email', 'like', '%' . $q . '%')
-        ->orWhere('address_city', 'like', '%' . $q . '%')
-        ->orderby('registration_date', 'desc')
-        ->get();
-        
-        return response()->json($search);
-    }
 }
