@@ -12,9 +12,13 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $id)
     {
-        $data['users'] = DB::table('user')->get();
+        $data['users'] = DB::table('db_publisher')
+        ->join('user', 'db_publisher.id', '=', 'user.db_publisher_id')
+        ->where('db_publisher.id', '=', $id)
+        ->get();
+
         return view('welcome', $data);
     }
 
@@ -24,14 +28,14 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function publisherUsers($id)
+    public function publisherUsers(Request $request, $id)
     {
         $publishers = DB::table('db_publisher')
         ->join('user', 'db_publisher.id', '=', 'user.db_publisher_id')
         ->where('db_publisher.id', '=', $id)
         ->get();
 
-        return $publishers;
+        return response()->json($publishers);
     }
 
     /**
@@ -43,7 +47,7 @@ class UsersController extends Controller
     public function show()
     {
         $users = DB::table('user')->get();
-        return $users;
+        return response()->json($users);
     }
 
     /**
@@ -76,7 +80,7 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function search($q)
+    public function search(Request $request, $q)
     {
         
         $search = DB::table('user')
@@ -87,6 +91,6 @@ class UsersController extends Controller
         ->orderby('registration_date', 'desc')
         ->get();
         
-        return $search;
+        return response()->json($search);
     }
 }

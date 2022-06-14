@@ -32,6 +32,7 @@
                     <thead class="thead-dark">
                         <tr>
                             <th>#ID</th>
+                            <th>Publisher ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>City</th>
@@ -42,6 +43,7 @@
                        @foreach ($users as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
+                            <td>{{ $user->db_publisher_id }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->address_city }}</td>

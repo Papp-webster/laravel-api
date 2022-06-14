@@ -19,15 +19,16 @@ use App\Http\Controllers\AuthController;
 
 // Public routes
 
-//Route::post('api/register', [AuthController::class, 'register']);
+
 Route::post('users/login', [AuthController::class, 'login']);
-Route::get('/', [UsersController::class, 'index']);
+
 Route::get('/users', [UsersController::class, 'show']);
+
 
 
 // Protected routes
 Route::group(['middleware' => ['api_token']], function () {
- Route::get('/users/publisher/{id}', [UsersController::class, 'publisherUsers']);
- Route::get('/users/search/{q}', [UsersController::class, 'search']);
-    
+   Route::get('/users/publisher/{id}/{api_token}', [UsersController::class, 'publisherUsers']);
+   Route::get('/users/search/{q}/{api_token}', [UsersController::class, 'search']);
+   Route::get('/publisher/{id}/{api_token}', [UsersController::class, 'index'])->name('publisher');
 });
