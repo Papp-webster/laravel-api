@@ -4,23 +4,30 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
+
 
 class AuthController extends Controller
 {
     public function login(Request $request) {
 
-         $user_token = array(
-                'api_token' => $request->api_token,
-            );
+        $request->validate([
+            'id' => 'required',
+            'api_token' => 'required',
+        ]);
 
-            
-        return response()->json(['message' => 'Belépett!']);
-          
-      
-       
-    }
+        $credetials = request(['id', 'api_token']);
+
+        $users = DB::table('db_publisher')->get();
+
+        if (!$credetials) {
+        
+            return response()->json('Belépés csak tokenel!', 401);
+
+       }
+    
+       return response()->json(['message' => 'Belépett!']);
 
     
+}
+
 }
