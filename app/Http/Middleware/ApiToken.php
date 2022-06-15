@@ -16,7 +16,8 @@ class ApiToken
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->token != env('API_KEY')) {
+        if ($request->token != env('API_KEY') && $request->token != env('API_KEY_V2')) {
+            
         return response()->json('Belépés csak tokenel!', 401);
     } 
         
